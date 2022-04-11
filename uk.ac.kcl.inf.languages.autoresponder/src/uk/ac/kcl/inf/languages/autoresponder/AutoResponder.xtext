@@ -1,0 +1,104 @@
+grammar uk.ac.kcl.inf.languages.autoresponder.AutoResponder with org.eclipse.xtext.common.Terminals
+
+generate autoResponder "http://www.ac.uk/kcl/inf/languages/autoresponder/AutoResponder"
+
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+AutoResponderProgram:
+	statements += Statement* // "*" here means any number statements are allowed 
+;
+
+Statement:
+	TriggerStatement |
+	ActivityStatement |
+	InstructStatement |
+	HearStatement |
+	TerminationStatement |
+	ContactStatement |
+	VariableDeclaration |
+	StringVariableDeclaration
+;
+
+HearStatement:
+	'WaitForInput' value=INT
+;
+
+VariableDeclaration:
+	"var" name=ID "=" value=INT
+;
+
+StringLiteral:
+	val = STRING
+;
+
+StringVariableDeclaration:
+	"var" name=ID "=" string=STRING
+;
+
+StringVarExpression:
+	var = [StringVariableDeclaration]
+;
+
+StringExpression:
+	StringLiteral |
+	StringVarExpression
+;
+
+TriggerStatement: // Trigger the Activity
+	'Input' '(' name = ID ')' '->' activity = [ActivityStatement]
+		statement += ActivityStatement
+;
+
+ActivityStatement:
+	'Activity' name=ID ':' 'on' last_input = StringExpression '{'
+		statements += Statement*
+	'}'
+;
+
+InstructStatement:
+	'Instruct' '->' instruction = StringExpression
+;
+
+TerminationStatement:
+	state=ActivityState
+;
+
+enum ActivityState:
+	back | repeat | exit
+;
+
+ContactStatement:
+	'transferManual' '->' phoneNumber = StringExpression
+;
+
+// 可能还需要转接人工客服、或者留言、
+Addition returns Expression:
+	Multiplication ({Addition.left = current} operator+=("+"|"-") right+=Multiplication)*
+;
+
+Multiplication returns Expression:
+	Primary ({Multiplication.left = current} operator+=("*"|"/") right+=Primary)*
+;
+
+Primary returns Expression:
+	IntLiteral |
+	IntVarExpression |
+	RealLiteral |
+	"(" Addition ")"
+;
+
+IntLiteral:
+	val = INT
+;
+
+RealLiteral:
+	val = REAL
+;
+
+IntVarExpression:
+	var = [VariableDeclaration]
+;
+
+REAL returns ecore::EFloat hidden():
+	INT? "." INT
+; 
