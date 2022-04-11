@@ -1,0 +1,77 @@
+Instruct -> "*******************************************************************"
+Instruct -> "**         Welcome to the AutoResponder Shopping System!         **"
+Instruct -> "**    Please follow the instructions below to use the system.    **"
+Instruct -> "*******************************************************************"
+Instruct -> "**    Input 'start' to start ...     "
+Instruct -> "**    Input 'exit' to exit ...     "
+
+WaitForInput 0
+
+Input(start) -> Main
+Activity Main: on "start" {
+	
+	Instruct -> "****************************  Main  ********************************"
+	Instruct -> "**  Please enter the corresponding keyword to choose the service: **"
+	Instruct -> "**  P - Product                                                   **"
+	Instruct -> "**  T - Trolley                                                   **"
+	Instruct -> "**  Tec - TechSupport                                             **"
+	Instruct -> "**  Back - Back to Welcome Page                                   **"
+	
+	WaitForInput 1
+	
+	Input(P) -> Product
+	Activity Product: on "P" {
+		
+		Instruct -> "**************************  Product  *******************************"
+		Instruct -> "**  Choose the product...:                                        **"
+		Instruct -> "**  A - Apple                                                     **"
+		Instruct -> "**  Back - Back to Main                                           **"
+		
+		WaitForInput 2
+		
+		Input(A) -> Apple
+		Activity Apple: on "A" {
+			Instruct -> "***************************  Apple  ********************************"
+			Instruct -> "**  Choose the options below to know more...:                     **" 
+            Instruct -> "**  D - Description                                               **"
+            Instruct -> "**  Back - Back                                                   **"
+            
+			WaitForInput 3
+			
+			Input(D) -> Description
+			Activity Description: on "D" {
+				Instruct -> "Description: Sweet, crisp and juicy, this apple variety gets its beautiful colour from the British climate at this time of year."
+				Instruct -> "**  Back - Back                                                   **"
+				
+				WaitForInput 4
+			
+			}
+		}
+
+	}
+
+	Input(T) -> Trolley
+	Activity Trolley: on "T" {
+		Instruct -> "**  Trolley chosen! ---- More functions coming...				   **"
+		Instruct -> "**  Back - Back                                                   **"
+		
+		WaitForInput 2
+		
+	}
+	
+	Input(Tec) -> TechSupport
+	Activity TechSupport: on "Tec" {
+		 Instruct -> "TechSupport chosen!"
+		 Instruct -> "**  Back - Back                                                   **"
+		 
+		 transferManual -> "+441800000000"
+		 
+		 WaitForInput 2
+		
+	}
+}
+
+
+
+
+
