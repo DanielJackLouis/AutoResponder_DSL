@@ -71,7 +71,6 @@ ContactStatement:
 	'transferManual' '->' phoneNumber = StringExpression
 ;
 
-// 可能还需要转接人工客服、或者留言、
 Addition returns Expression:
 	Multiplication ({Addition.left = current} operator+=("+"|"-") right+=Multiplication)*
 ;
